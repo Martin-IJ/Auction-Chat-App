@@ -7,9 +7,10 @@ export function Messages() {
   const { id } = useParams<{ id: string }>();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
-  const artwork = id ? artworks[parseInt(id, 10)] : undefined;
 
-  // Load messages from localStorage when component mounts
+  const artwork = id ? artworks[parseInt(id, 10)] : undefined;
+  const roomId = id ? `artwork-${id}` : "default-room";
+
   useEffect(() => {
     const storedMessages = localStorage.getItem(`messages-artwork-${id}`);
     if (storedMessages) {
@@ -18,16 +19,12 @@ export function Messages() {
   }, [id]);
 
   const { send } = useMessages({
-    roomId: `artwork-${id}`,
     listener: (event: { message: Message }) => {
       console.log("Received message:", event.message);
-
+  
       setMessages((prev) => {
         const updatedMessages = [...prev, event.message];
-        localStorage.setItem(
-          `messages-artwork-${id}`,
-          JSON.stringify(updatedMessages)
-        );
+        localStorage.setItem(`messages-${roomId}`, JSON.stringify(updatedMessages));
         return updatedMessages;
       });
     },
