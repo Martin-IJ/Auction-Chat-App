@@ -5,7 +5,7 @@ export const artworks = [
     title: "Ethereal Blossoms",
     artist: "Sarah Mitchell",
     priceType: "Starting bid",
-    price: "$1,200 (1 bid)",
+    price: "$1,200",
   },
   {
     id: 2,

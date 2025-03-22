@@ -17,7 +17,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Artwork for Sale */}
+      {/* Art Gallery */}
       <AuctionGallery />
     </main>
   );

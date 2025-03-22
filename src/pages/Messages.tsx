@@ -1,23 +1,49 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { Message, useMessages } from "@ably/chat";
+import { artworks } from "@/db/artworks";
 
 export function Messages() {
+  const { id } = useParams<{ id: string }>();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
+  const artwork = id ? artworks[parseInt(id, 10)] : undefined;
+
+  // Load messages from localStorage when component mounts
+  useEffect(() => {
+    const storedMessages = localStorage.getItem(`messages-artwork-${id}`);
+    if (storedMessages) {
+      setMessages(JSON.parse(storedMessages));
+    }
+  }, [id]);
+
   const { send } = useMessages({
+    roomId: `artwork-${id}`,
     listener: (event: { message: Message }) => {
-      console.log("received message", event.message);
-      setMessages((prev) => [...prev, event.message]);
+      console.log("Received message:", event.message);
+
+      setMessages((prev) => {
+        const updatedMessages = [...prev, event.message];
+        localStorage.setItem(
+          `messages-artwork-${id}`,
+          JSON.stringify(updatedMessages)
+        );
+        return updatedMessages;
+      });
     },
   });
 
   const handleSend = async () => {
+    if (!message.trim()) return;
+
     try {
-      await send({ text: message });
-      console.log("sent message", message);
-      setMessage("");
+      const newMessage = { text: message, timestamp: Date.now() };
+
+      await send(newMessage);
+      console.log("Sent message:", message);
+      setMessage(""); // Clear input
     } catch (error) {
-      console.error("error sending message", error);
+      console.error("Error sending message:", error);
     }
   };
 
@@ -28,8 +54,16 @@ export function Messages() {
         minWidth: "400px",
         margin: "20px auto",
         fontFamily: "Arial, sans-serif",
+        padding: "20px",
       }}
     >
+      {artwork && (
+        <h1
+          style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "20px" }}
+        >
+          {artwork.title} Chat Room
+        </h1>
+      )}
       <div
         className="messages-container"
         style={{
@@ -58,7 +92,9 @@ export function Messages() {
             <div
               style={{ fontSize: "0.8em", color: "#666", marginBottom: "4px" }}
             >
-              {new Date(msg.timestamp).toLocaleTimeString()}
+              {msg.timestamp
+                ? new Date(msg.timestamp).toLocaleTimeString()
+                : "Unknown time"}
             </div>
             <div style={{ wordBreak: "break-word", color: "#333" }}>
               {msg.text}

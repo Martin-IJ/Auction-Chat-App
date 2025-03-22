@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useParams } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import Header from "./components/Header/Header";
 import AllArtwork from "./pages/AllArtwork";
@@ -7,9 +7,11 @@ import * as Ably from "ably";
 import { ChatClient, ChatClientProvider, ChatRoomProvider } from "@ably/chat";
 import { Messages } from "./pages/Messages";
 
+const ablyApiKey = import.meta.env.VITE_ABLY_API_KEY;
+
 const ablyClient = new Ably.Realtime({
   clientId: "ably-chat",
-  key: "c_rswQ.Bh5qPg:QQ9E8sGbWfbmxr3ysRaa8_KKNLc-IkwFpylTmvK-b1k",
+  key: ablyApiKey,
 });
 
 const chatClient = new ChatClient(ablyClient, {});
@@ -20,6 +22,17 @@ const customRoomOptions = {
   },
 };
 
+const MessagesWithChatRoom = () => {
+  const { id } = useParams<{ id: string }>();
+  return (
+    <ChatClientProvider client={chatClient}>
+      <ChatRoomProvider id={`artwork-${id}`} options={customRoomOptions}>
+        <Messages />
+      </ChatRoomProvider>
+    </ChatClientProvider>
+  );
+};
+
 function App() {
   return (
     <>
@@ -28,19 +41,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/all-artwork" element={<AllArtwork />} />
         <Route path="/artwork/:id" element={<ArtworkDetails />} />
-        <Route
-          path="/messages"
-          element={
-            <ChatClientProvider client={chatClient}>
-              <ChatRoomProvider
-                id="getting-started"
-                options={customRoomOptions}
-              >
-                <Messages />
-              </ChatRoomProvider>
-            </ChatClientProvider>
-          }
-        />
+        <Route path="/messages/:id" element={<MessagesWithChatRoom />} />
       </Routes>
     </>
   );
