@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { artworks } from "@/db/artworks";
 import { Button } from "@/components/ui/button";
 
@@ -34,9 +34,11 @@ const ArtworkDetails = () => {
           <p className="text-gray-600 mb-4">{artwork.artist}</p>
           <p className="text-gray-600 mb-4">{artwork.priceType}</p>
           <p className="text-gray-600 mb-4">{artwork.price}</p>
-          <Button variant="outline" size="lg">
-            Chat Room
-          </Button>
+          <Link to='/messages'>
+            <Button variant="outline" size="lg">
+              Chat Room
+            </Button>
+          </Link>
         </div>
       </div>
 
