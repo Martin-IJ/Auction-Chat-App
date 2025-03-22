@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Message, useMessages } from "@ably/chat";
 import { artworks } from "@/db/artworks";
+import { startAuction, placeBid, endAuction } from "@/services/biddingService";
 
 export function Messages() {
   const { id } = useParams<{ id: string }>();
@@ -12,16 +13,26 @@ export function Messages() {
   const roomId = id ? `artwork-${id}` : "default-room";
 
   useEffect(() => {
+    if (id) {
+      startAuction(parseInt(id, 10));
+    }
+
     const storedMessages = localStorage.getItem(`messages-artwork-${id}`);
     if (storedMessages) {
       setMessages(JSON.parse(storedMessages));
     }
+
+    return () => {
+      if (id) {
+        endAuction(`artwork-${id}`);
+      }
+    };
   }, [id]);
 
   const { send } = useMessages({
     listener: (event: { message: Message }) => {
       console.log("Received message:", event.message);
-  
+
       setMessages((prev) => {
         const updatedMessages = [...prev, event.message];
         localStorage.setItem(`messages-${roomId}`, JSON.stringify(updatedMessages));
