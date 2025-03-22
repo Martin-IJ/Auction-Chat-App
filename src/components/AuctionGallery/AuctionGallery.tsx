@@ -1,14 +1,27 @@
+import { useState } from "react";
 import { FiHeart } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
 import { artworks } from "@/db/artworks";
 import { useNavigate } from "react-router-dom";
+import Modal from "../Modal/Modal";
 
 const AuctionGallery = () => {
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedArtworkIndex, setSelectedArtworkIndex] = useState<number | null>(null);
 
   const handleBidNowClick = (index: number) => {
-    navigate(`/artwork/${index}`);
+    setSelectedArtworkIndex(index);
+    setIsModalOpen(true);
   };
+
+  const handleSaveName = (name: string) => {
+    localStorage.setItem("userName", name);
+    if (selectedArtworkIndex !== null) {
+      navigate(`/artwork/${selectedArtworkIndex}`);
+    }
+  };
+
   return (
     <section className="py-8">
       <div className="container mx-auto px-4">
@@ -45,6 +58,7 @@ const AuctionGallery = () => {
           ))}
         </div>
       </div>
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSave={handleSaveName} />
     </section>
   );
 };
