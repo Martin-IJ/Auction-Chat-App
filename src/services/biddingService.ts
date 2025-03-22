@@ -1,5 +1,5 @@
-import { Realtime } from "ably";
-import { artworks } from "@/db/artworks";
+// import { Realtime } from "ably";
+// import { artworks } from "@/db/artworks";
 
 interface Bid {
   userId: string;

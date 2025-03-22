@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Message, useMessages } from "@ably/chat";
 import { artworks } from "@/db/artworks";
-import { startAuction, placeBid, endAuction } from "@/services/biddingService";
+import { startAuction, endAuction } from "@/services/biddingService";
 
 export function Messages() {
   const { id } = useParams<{ id: string }>();
