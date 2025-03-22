@@ -1,0 +1,42 @@
+export const artworks = [
+  {
+    id: 1,
+    src: "/assets/images/1.jpg",
+    title: "Ethereal Blossoms",
+    artist: "Sarah Mitchell",
+    priceType: "Starting bid",
+    price: "$1,200 (1 bid)",
+  },
+  {
+    id: 2,
+    src: "/assets/images/2.jpg",
+    title: "Whispers of the Sea",
+    artist: "Alex Roberts",
+    priceType: "Buy now price",
+    price: "$3,400",
+  },
+  {
+    id: 3,
+    src: "/assets/images/3.jpg",
+    title: "Harmony in Chaos",
+    artist: "Maya Johnson",
+    priceType: "Current bid",
+    price: "$1,750",
+  },
+  {
+    id: 4,
+    src: "/assets/images/4.jpg",
+    title: "Fragmented Realities",
+    artist: "Daniel Chen",
+    priceType: "Buy now price",
+    price: "$1,900",
+  },
+  {
+    id: 5,
+    src: "/assets/images/1.jpg",
+    title: "Urban Reflections",
+    artist: "Olivia Parker",
+    priceType: "Starting bid",
+    price: "$2,200",
+  },
+];
